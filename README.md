@@ -1,4 +1,4 @@
-# RESTful microservice with Sybase
+# RESTful microservice with Quarkus and Sybase
 
 ## Technologies
 
