@@ -1,47 +1,69 @@
 package org.acme.customer;
 
-import io.agroal.api.AgroalDataSource;
-import lombok.RequiredArgsConstructor;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.enterprise.context.ApplicationScoped;
+
+import org.acme.DatasourceUtils;
+
+import io.agroal.api.AgroalDataSource;
+import lombok.RequiredArgsConstructor;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 public class CustomerRepository {
 
-    final AgroalDataSource dataSource;
+    public static final String COLUMN_ID = "customer_id";
+    public static final String COLUMN_DNI = "dni";
+    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_SURNAME = "surname";
 
-    public List<Customer> findAll() throws SQLException {
+    private static final String DB_NAME = "gizlo_test";
+    private static final String SP_NAME = "sp_select_customers";
+
+    final AgroalDataSource dataSource;
+    final DatasourceUtils datasourceUtils;
+
+    public List<CustomerResponse> findAll2() throws SQLException {
         Connection connection = null;
         CallableStatement cstmt = null;
         ResultSet resultSet = null;
 
-        List<Customer> customers = new ArrayList<>();
+        List<CustomerResponse> customers = new ArrayList<>();
+        String sql = String.format("{call %s..%s()}", DB_NAME, SP_NAME);
 
         try {
             connection = dataSource.getConnection();
-            cstmt = connection.prepareCall("{call gizlo_test..sp_select_customers()}");
+            cstmt = connection.prepareCall(sql);
             resultSet = cstmt.executeQuery();
 
             while (resultSet.next()) {
-                Customer customer = new Customer();
-                customer.setCustomerId(resultSet.getInt(Customer.COLUMN_ID));
-                customer.setName(resultSet.getString(Customer.COLUMN_NAME));
+                CustomerResponse customer = new CustomerResponse();
+                customer.setCustomerId(resultSet.getInt(COLUMN_ID));
+                customer.setDni(resultSet.getString(COLUMN_DNI));
+                customer.setName(resultSet.getString(COLUMN_NAME));
+                customer.setSurname(resultSet.getString(COLUMN_SURNAME));
                 customers.add(customer);
             }
         } finally {
-            if (resultSet != null) resultSet.close();
-            if (cstmt != null) cstmt.close();
-            if (connection != null) connection.close();
+            if (resultSet != null)
+                resultSet.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (connection != null)
+                connection.close();
         }
 
         return customers;
+    }
+
+    public List<Map<String, Object>> findAll() throws SQLException {
+        return datasourceUtils.executeStoredProcedure(SP_NAME);
     }
 }
