@@ -25,7 +25,9 @@ public class CustomerRepository {
     public static final String COLUMN_SURNAME = "surname";
 
     private static final String DB_NAME = "gizlo_test";
-    private static final String SP_NAME = "sp_select_customers";
+    private static final String SP_NAME_SELECT_CUSTOMERS = "sp_select_customers";
+
+    private static final String SP_PARAM_DNI = "@dni";
 
     final AgroalDataSource dataSource;
     final DatasourceUtils datasourceUtils;
@@ -36,7 +38,7 @@ public class CustomerRepository {
         ResultSet resultSet = null;
 
         List<CustomerResponse> customers = new ArrayList<>();
-        String sql = String.format("{call %s..%s()}", DB_NAME, SP_NAME);
+        String sql = String.format("{call %s..%s()}", DB_NAME, SP_NAME_SELECT_CUSTOMERS);
 
         try {
             connection = dataSource.getConnection();
@@ -64,6 +66,10 @@ public class CustomerRepository {
     }
 
     public List<Map<String, Object>> findAll() throws SQLException {
-        return datasourceUtils.executeStoredProcedure(SP_NAME);
+        return datasourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS);
+    }
+
+    public List<Map<String, Object>> findByDni(String dni) throws SQLException {
+        return datasourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS, Map.of(SP_PARAM_DNI, dni));
     }
 }
