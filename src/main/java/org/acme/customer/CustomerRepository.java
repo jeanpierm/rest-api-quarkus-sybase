@@ -20,9 +20,7 @@ public class CustomerRepository {
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_SURNAME = "surname";
 
-    private static final String DB_NAME = "gizlo_test";
     private static final String SP_NAME_SELECT_CUSTOMERS = "sp_select_customers";
-
     private static final String SP_PARAM_DNI = "@dni";
 
     final AgroalDataSource dataSource;
