@@ -1,10 +1,6 @@
 package org.acme.customer;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,39 +27,6 @@ public class CustomerRepository {
 
     final AgroalDataSource dataSource;
     final DatasourceUtils datasourceUtils;
-
-    public List<CustomerResponse> findAll2() throws SQLException {
-        Connection connection = null;
-        CallableStatement cstmt = null;
-        ResultSet resultSet = null;
-
-        List<CustomerResponse> customers = new ArrayList<>();
-        String sql = String.format("{call %s..%s()}", DB_NAME, SP_NAME_SELECT_CUSTOMERS);
-
-        try {
-            connection = dataSource.getConnection();
-            cstmt = connection.prepareCall(sql);
-            resultSet = cstmt.executeQuery();
-
-            while (resultSet.next()) {
-                CustomerResponse customer = new CustomerResponse();
-                customer.setCustomerId(resultSet.getInt(COLUMN_ID));
-                customer.setDni(resultSet.getString(COLUMN_DNI));
-                customer.setName(resultSet.getString(COLUMN_NAME));
-                customer.setSurname(resultSet.getString(COLUMN_SURNAME));
-                customers.add(customer);
-            }
-        } finally {
-            if (resultSet != null)
-                resultSet.close();
-            if (cstmt != null)
-                cstmt.close();
-            if (connection != null)
-                connection.close();
-        }
-
-        return customers;
-    }
 
     public List<Map<String, Object>> findAll() throws SQLException {
         return datasourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS);
