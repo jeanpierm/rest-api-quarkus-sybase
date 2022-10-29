@@ -21,7 +21,10 @@ public class CustomerRepository {
     public static final String COLUMN_SURNAME = "surname";
 
     private static final String SP_NAME_SELECT_CUSTOMERS = "sp_select_customers";
+    private static final String SP_NAME_SELECT_CUSTOMERS_BY_DNI = "sp_select_customers_by_dni";
+    private static final String SP_NAME_SELECT_CUSTOMERS_BY_ID = "sp_select_customers_by_id";
     private static final String SP_PARAM_DNI = "@dni";
+    private static final String SP_PARAM_ID = "@customer_id";
 
     final AgroalDataSource dataSource;
     final DatasourceUtils datasourceUtils;
@@ -31,6 +34,10 @@ public class CustomerRepository {
     }
 
     public List<Map<String, Object>> findByDni(String dni) throws SQLException {
-        return datasourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS, Map.of(SP_PARAM_DNI, dni));
+        return datasourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS_BY_DNI, Map.of(SP_PARAM_DNI, dni));
+    }
+
+    public List<Map<String, Object>> findById(Integer id) throws SQLException {
+        return datasourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS_BY_ID, Map.of(SP_PARAM_ID, id));
     }
 }

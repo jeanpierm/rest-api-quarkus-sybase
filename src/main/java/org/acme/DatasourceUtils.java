@@ -44,9 +44,7 @@ public class DatasourceUtils {
             connection = dataSource.getConnection();
             cs = connection.prepareCall(sql);
 
-            if (parameterCount != 0) {
-                setSpParameters(parameters, cs);
-            }
+            if (parameterCount != 0) setSpParameters(parameters, cs);
 
             rs = cs.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -82,11 +80,7 @@ public class DatasourceUtils {
         sqlStringBuilder.append("{call %s..%s(");
         for (int i = 0; i < parameterCount; i++) {
             boolean isTheLast = i == parameterCount - 1;
-            if (isTheLast) {
-                sqlStringBuilder.append("?");
-            } else {
-                sqlStringBuilder.append("?,");
-            }
+            sqlStringBuilder.append(isTheLast ? "?" : "?,");
         }
         sqlStringBuilder.append(")}");
 

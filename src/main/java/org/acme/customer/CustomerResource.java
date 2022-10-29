@@ -9,6 +9,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.jboss.resteasy.reactive.RestPath;
+
 import lombok.RequiredArgsConstructor;
 
 @Path("/api/v1.0/customers")
@@ -27,5 +29,11 @@ public class CustomerResource {
     @POST
     public CustomerResponse findByDni(GetCustomerByDniRequest request) {
         return customerService.findByDni(request.getDni());
+    }
+
+    @GET
+    @Path("{id}")
+    public CustomerResponse findById(@RestPath Integer id) {
+        return customerService.findById(id);
     }
 }

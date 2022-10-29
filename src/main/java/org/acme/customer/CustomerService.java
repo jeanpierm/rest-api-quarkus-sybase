@@ -40,4 +40,17 @@ public class CustomerService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public CustomerResponse findById(Integer id) {
+        try {
+            List<Map<String, Object>> rows = customerRepository.findById(id);
+            return rows.stream()
+                    .map(row -> CustomerMapper.rowToCustomerResponse(row))
+                    .findFirst()
+                    .orElseThrow(() -> new WebApplicationException("Customer not found",
+                            Status.NOT_FOUND));
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }
