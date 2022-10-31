@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.acme.DatasourceUtils;
+import org.acme.DataSourceUtils;
 
 import io.agroal.api.AgroalDataSource;
 import lombok.RequiredArgsConstructor;
@@ -27,17 +27,17 @@ public class CustomerRepository {
     private static final String SP_PARAM_ID = "@customer_id";
 
     final AgroalDataSource dataSource;
-    final DatasourceUtils datasourceUtils;
+    final DataSourceUtils dataSourceUtils;
 
     public List<Map<String, Object>> findAll() throws SQLException {
-        return datasourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS);
+        return dataSourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS);
     }
 
     public List<Map<String, Object>> findByDni(String dni) throws SQLException {
-        return datasourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS_BY_DNI, Map.of(SP_PARAM_DNI, dni));
+        return dataSourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS_BY_DNI, Map.of(SP_PARAM_DNI, dni));
     }
 
     public List<Map<String, Object>> findById(Integer id) throws SQLException {
-        return datasourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS_BY_ID, Map.of(SP_PARAM_ID, id));
+        return dataSourceUtils.executeStoredProcedure(SP_NAME_SELECT_CUSTOMERS_BY_ID, Map.of(SP_PARAM_ID, id));
     }
 }

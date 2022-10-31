@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class DatasourceUtils {
+public class DataSourceUtils {
 
     private static final String DB_NAME = "gizlo_test";
 
